@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1 - Teasing Calendar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            border: 2px solid #00d4ff;
+            border-radius: 10px;
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        h1 {
+            color: #00d4ff;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .subtitle {
+            color: #a0a0a0;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .phase-badge {
+            display: inline-block;
+            background: #00d4ff;
+            color: #1a1a2e;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .goal-box {
+            background: rgba(0, 212, 255, 0.2);
+            padding: 20px;
+            border-left: 4px solid #00d4ff;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+
+        .goal-title {
+            color: #00d4ff;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .goal-content {
+            color: #c0c0c0;
+        }
+
+        .goal-content ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .goal-content li {
+            margin-bottom: 8px;
+        }
+
+        .timeline-container {
+            margin-bottom: 40px;
+        }
+
+        .timeline-title {
+            color: #00d4ff;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .day-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .day-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(0, 100, 150, 0.1) 100%);
+            border: 2px solid #00d4ff;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.05) 50%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .day-number {
+            color: #00d4ff;
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .day-label {
+            color: #a0a0a0;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .task-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 3px solid #00d4ff;
+            color: #c0c0c0;
+            font-size: 0.95em;
+        }
+
+        .task-item strong {
+            color: #00d4ff;
+        }
+
+        .content-type {
+            display: inline-block;
+            background: #00d4ff;
+            color: #1a1a2e;
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-right: 5px;
+            margin-bottom: 10px;
+        }
+
+        .icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(100, 0, 255, 0.1) 100%);
+            border: 2px solid #a0a0ff;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 40px;
+        }
+
+        .summary-title {
+            color: #a0a0ff;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .summary-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            color: #c0c0c0;
+        }
+
+        .summary-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 3px solid #a0a0ff;
+        }
+
+        .summary-item strong {
+            color: #a0a0ff;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #00d4ff;
+        }
+
+        .stat-number {
+            color: #00d4ff;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            color: #a0a0a0;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .tips {
+            background: rgba(100, 0, 255, 0.1);
+            border-left: 4px solid #a0a0ff;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            color: #c0c0c0;
+        }
+
+        .tips strong {
+            color: #a0a0ff;
+        }
+
+        .tips ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .tips li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .day-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .day-number {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 ESEN Brain Games Expo</h1>
+            <p class="subtitle">Phase 1: Teasing Campaign</p>
+            <span class="phase-badge">10-14 Days Before Event</span>
+        </header>
+
+        <div class="goal-box">
+            <div class="goal-title">🎯 Phase 1 Goal: Build Curiosity</div>
+            <div class="goal-content">
+                <p>Create intrigue and anticipation without revealing everything. Make students wonder "What's this event about?" and get them excited.</p>
+                <ul>
+                    <li>✨ Dark gaming visuals & mysterious content</li>
+                    <li>⏱️ Countdown stories (D-5, D-3, D-1)</li>
+                    <li>❓ Questions & clues about the event</li>
+                    <li>🔮 Build anticipation gradually</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="timeline-container">
+            <div class="timeline-title">📅 Teasing Timeline</div>
+
+            <div class="day-cards">
+                <!-- DAY 1 -->
+                <div class="day-card">
+                    <div class="icon">🕵️</div>
+                    <div class="day-number">Day 1</div>
+                    <div class="day-label">Mystery Begins</div>
+                    <div class="content-type">POST + STORY</div>
+                    
+                    <div class="task-item">
+                        <strong>Post Caption:</strong><br>
+                        "Something HUGE is coming to ESEN... 🧠✨ Are you ready for this? 👀 Swipe up for clues 🔮 #ComingSoon"
+                    </div>
+                    <div class="task-item">
+                        <strong>Visual:</strong><br>
+                        Dark, mysterious design with question marks & gaming elements. Low lighting, purple/cyan neon colors.
+                    </div>
+                    <div class="task-item">
+                        <strong>Stories:</strong><br>
+                        3-5 stories with cryptic emoji, gaming visuals, "What's coming?" text
+                    </div>
+                </div>
+
+                <!-- DAY 2-3 -->
+                <div class="day-card">
+                    <div class="icon">🎯</div>
+                    <div class="day-number">Days 2-3</div>
+                    <div class="day-label">Hint Clues</div>
+                    <div class="content-type">STORIES</div>
+                    
+                    <div class="task-item">
+                        <strong>Daily Stories (2 per day):</strong><br>
+                        • "Hint 1: I involve strategy..." ♟️<br>
+                        • "Hint 2: I'm all about innovation..." 💡<br>
+                        • "Hint 3: I love solving problems..." 🧩<br>
+                        • "Hint 4: We're hosting something BIG" 🚀
+                    </div>
+                    <div class="task-item">
+                        <strong>Story Elements:</strong><br>
+                        Dark gaming visuals, poll stickers ("What could it be?"), mystery atmosphere
+                    </div>
+                </div>
+
+                <!-- DAY 4-5 -->
+                <div class="day-card">
+                    <div class="icon">🎬</div>
+                    <div class="day-number">Days 4-5</div>
+                    <div class="day-label">Teaser Reel</div>
+                    <div class="content-type">REEL + STORIES</div>
+                    
+                    <div class="task-item">
+                        <strong>Reel (15-30 sec):</strong><br>
+                        Quick flashes of gaming, chess, tech, problem-solving with dramatic music. Text: "D-5... Something's coming"
+                    </div>
+                    <div class="task-item">
+                        <strong>Reel Caption:</strong><br>
+                        "5 days until we reveal it all 🧠⚡ Can you guess what this is? #BrainGamesExpo"
+                    </div>
+                    <div class="task-item">
+                        <strong>Stories:</strong><br>
+                        Behind-the-scenes of preparation, "D-5" countdown text
+                    </div>
+                </div>
+
+                <!-- DAY 6-7 -->
+                <div class="day-card">
+                    <div class="icon">🔥</div>
+                    <div class="day-number">Days 6-7</div>
+                    <div class="day-label">Intensity Builds</div>
+                    <div class="content-type">CAROUSEL + STORIES</div>
+                    
+                    <div class="task-item">
+                        <strong>Carousel Post:</strong><br>
+                        Slide 1: Title "The Ultimate Brain Challenge"<br>
+                        Slide 2: Gaming icon + "Strategy"<br>
+                        Slide 3: Puzzle icon + "Problem-Solving"<br>
+                        Slide 4: Brain icon + "Innovation"<br>
+                        Slide 5: "Coming SOON"
+                    </div>
+                    <div class="task-item">
+                        <strong>Stories:</strong><br>
+                        More intense visuals, "D-3" countdown, questions "What zone are you going to?"
+                    </div>
+                </div>
+
+                <!-- DAY 8-9 -->
+                <div class="day-card">
+                    <div class="icon">📣</div>
+                    <div class="day-number">Days 8-9</div>
+                    <div class="day-label">Reveal Hints</div>
+                    <div class="content-type">STORIES + POSTS</div>
+                    
+                    <div class="task-item">
+                        <strong>Story Reveals (Gradual):</strong><br>
+                        • "CHESS CLUB is organizing..." ♟️<br>
+                        • "HIVE Club is involved..." 💡<br>
+                        • "ENACTUS too..." 🌍
+                    </div>
+                    <div class="task-item">
+                        <strong>Caption Post:</strong><br>
+                        "3 clubs. 1 epic event. Brain Games coming Feb 8 🧠🎮 #ESENBrainGamesExpo"
+                    </div>
+                    <div class="task-item">
+                        <strong>Stories:</strong><br>
+                        Club logos appearing, "D-1" hype, excitement building
+                    </div>
+                </div>
+
+                <!-- DAY 10-14 -->
+                <div class="day-card">
+                    <div class="icon">🚀</div>
+                    <div class="day-number">Days 10-14</div>
+                    <div class="day-label">Final Teasing</div>
+                    <div class="content-type">DAILY STORIES</div>
+                    
+                    <div class="task-item">
+                        <strong>Multiple Daily Stories:</strong><br>
+                        • Countdown: "5 days!", "4 days!", etc.<br>
+                        • Quick game previews<br>
+                        • Poll: "What game are you most excited for?"<br>
+                        • Behind-the-scenes setup shots
+                    </div>
+                    <div class="task-item">
+                        <strong>Frequency:</strong><br>
+                        2-3 stories per day to keep momentum
+                    </div>
+                    <div class="task-item">
+                        <strong>Tone:</strong><br>
+                        Hype, excitement, anticipation, gaming vibes
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-box">
+            <div class="summary-title">📊 Phase 1 Summary</div>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-number">14</div>
+                    <div class="stat-label">Days of Teasing</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Posts</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">Reel</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">20+</div>
+                    <div class="stat-label">Stories</div>
+                </div>
+            </div>
+
+            <div class="summary-content" style="margin-top: 20px;">
+                <div class="summary-item">
+                    <strong>Content Distribution:</strong><br>
+                    • 3 main posts<br>
+                    • 1 teaser reel<br>
+                    • 20+ daily stories<br>
+                    • 1 carousel
+                </div>
+                <div class="summary-item">
+                    <strong>Posting Frequency:</strong><br>
+                    • Posts: Every 2-3 days<br>
+                    • Stories: 2-3 per day<br>
+                    • Reel: Day 4-5<br>
+                    • Carousel: Day 6-7
+                </div>
+                <div class="summary-item">
+                    <strong>Key Focus:</strong><br>
+                    • Curiosity & mystery<br>
+                    • Dark gaming vibes<br>
+                    • Gradual reveals<br>
+                    • Build anticipation
+                </div>
+            </div>
+
+            <div class="tips">
+                <strong>💡 Pro Tips for Phase 1:</strong>
+                <ul>
+                    <li><strong>Use dark colors:</strong> Purple, cyan, dark blue for that gaming aesthetic</li>
+                    <li><strong>Ask questions:</strong> Use polls & questions in stories for engagement</li>
+                    <li><strong>Be consistent:</strong> Daily stories keep momentum going</li>
+                    <li><strong>Tease the 3 clubs:</strong> Reveal hints bit by bit (chess → hive → enactus)</li>
+                    <li><strong>Don't reveal everything:</strong> Save details for Phase 2</li>
+                    <li><strong>Monitor engagement:</strong> See which stories get the most taps</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
